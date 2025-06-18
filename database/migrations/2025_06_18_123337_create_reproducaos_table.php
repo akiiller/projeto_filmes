@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('avaliacaos', function (Blueprint $table) {
+        Schema::create('reproducaos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('filme_id')->constrained()->onDelete('cascade');
-            $table->decimal('nota', 3, 1);
+            // Cria a chave estrangeira para a tabela 'musicas'
+            $table->foreignId('musica_id')->constrained()->onDelete('cascade');
+            $table->date('data_reproducao');
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('avaliacaos');
+        Schema::dropIfExists('reproducaos');
     }
 };

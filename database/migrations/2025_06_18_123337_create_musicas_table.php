@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('filmes', function (Blueprint $table) {
+        Schema::create('musicas', function (Blueprint $table) {
             $table->id();
             $table->string('titulo');
-            $table->string('diretor');
-            $table->integer('ano_lancamento');
+            $table->string('artista');
+            $table->string('album');
             $table->string('genero');
-            $table->string('imagem')->nullable(); // Caminho da imagem
+            $table->string('imagem')->nullable(); // Campo para o caminho da imagem da capa
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('filmes');
+        Schema::dropIfExists('musicas');
     }
 };
