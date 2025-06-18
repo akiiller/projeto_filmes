@@ -14,7 +14,7 @@ class MusicaController extends Controller
     public function index()
     {
         // Busca todas as músicas do banco de dados
-        $musicas = Musica::all();
+        $musicas = Musica::paginate(10);
         // Retorna a view 'index' dentro da pasta 'musicas' e passa a variável $musicas
         return view('musicas.index', compact('musicas'));
     }
@@ -41,8 +41,8 @@ class MusicaController extends Controller
         ]);
 
         if ($request->hasFile('imagem')) {
-            $path = $request->file('imagem')->store('public/capas');
-            $validatedData['imagem'] = str_replace('public/', '', $path);
+            $path = $request->file('imagem')->store('musica_capas', 'public');
+            $validatedData['imagem'] =  $path;
         }
 
         Musica::create($validatedData);

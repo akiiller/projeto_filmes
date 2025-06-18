@@ -14,7 +14,64 @@
     @if ($musicas->isEmpty())
         <div class="alert alert-info" role="alert">
             Nenhuma música encontrada.
-            @auth
+            @auth// app/Http/Controllers/MusicaController.php
+
+// ... no topo do arquivo
+use Illuminate\Support\Facades\Storage; // <-- Importante!
+
+
+// No método store():
+public function store(Request $request)
+{
+    // ... validação
+    $data = $request->all();
+
+    if ($request->hasFile('imagem')) {
+        // Salva a imagem na pasta 'musica_capas' dentro de storage/app/public
+        $imagePath = $request->file('imagem')->store('musica_capas', 'public');
+        $data['imagem'] = $imagePath; // Armazena o caminho relativo no banco de dados
+    }
+
+    Musica::create($data);
+    // ... redirecionamento
+}
+
+// No método update():
+public function update(Request $request, Musica $musica)
+{
+    // ... validação
+    $data = $request->all();
+
+    if ($request->hasFile('imagem')) {
+        // Deleta a imagem antiga se existir
+        if ($musica->imagem) {
+            Storage::disk('public')->delete($musica->imagem);
+        }
+        $imagePath = $request->file('imagem')->store('musica_capas', 'public');
+        $data['imagem'] = $imagePath;
+    } elseif ($request->input('imagem_existente')) {
+        // Se houver um campo oculto para imagem existente e não houve novo upload, mantém a imagem existente
+        // (Isso é uma boa prática se você tiver um checkbox "remover imagem" ou algo assim)
+    } else {
+        // Se o campo de upload estiver vazio e não houver input para manter imagem existente, remove o campo imagem dos dados
+        unset($data['imagem']);
+    }
+
+
+    $musica->update($data);
+    // ... redirecionamento
+}
+
+// No método destroy():
+public function destroy(Musica $musica)
+{
+    // Deleta a imagem associada antes de deletar a música
+    if ($musica->imagem) {
+        Storage::disk('public')->delete($musica->imagem);
+    }
+    $musica->delete();
+    // ... redirecionamento
+}
                 Que tal <a href="{{ route('musicas.create') }}">adicionar uma nova agora</a>?
             @endauth
         </div>

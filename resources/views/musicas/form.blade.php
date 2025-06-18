@@ -1,38 +1,48 @@
-{{-- Este formulário será incluído nas views de 'create' e 'edit' --}}
-
-<div class="form-group mb-3">
-    <label for="titulo">Título</label>
-    <input type="text" name="titulo" id="titulo" class="form-control" value="{{ old('titulo', $musica->titulo ?? '') }}" required>
+<div class="mb-3">
+    <label for="titulo" class="form-label">Título:</label>
+    <input type="text" class="form-control" id="titulo" name="titulo" value="{{ old('titulo', $musica->titulo ?? '') }}" required>
+    @error('titulo')
+        <div class="text-danger">{{ $message }}</div>
+    @enderror
 </div>
 
-<div class="form-group mb-3">
-    <label for="artista">Artista</label>
-    <input type="text" name="artista" id="artista" class="form-control" value="{{ old('artista', $musica->artista ?? '') }}" required>
+<div class="mb-3">
+    <label for="artista" class="form-label">Artista:</label>
+    <input type="text" class="form-control" id="artista" name="artista" value="{{ old('artista', $musica->artista ?? '') }}" required>
+    @error('artista')
+        <div class="text-danger">{{ $message }}</div>
+    @enderror
 </div>
 
-<div class="form-group mb-3">
-    <label for="album">Álbum</label>
-    <input type="text" name="album" id="album" class="form-control" value="{{ old('album', $musica->album ?? '') }}" required>
+<div class="mb-3">
+    <label for="album" class="form-label">Álbum:</label>
+    <input type="text" class="form-control" id="album" name="album" value="{{ old('album', $musica->album ?? '') }}" required>
+    @error('album')
+        <div class="text-danger">{{ $message }}</div>
+    @enderror
 </div>
 
-<div class="form-group mb-3">
-    <label for="genero">Gênero</label>
-    <input type="text" name="genero" id="genero" class="form-control" value="{{ old('genero', $musica->genero ?? '') }}" required>
+<div class="mb-3">
+    <label for="genero" class="form-label">Gênero:</label>
+    <input type="text" class="form-control" id="genero" name="genero" value="{{ old('genero', $musica->genero ?? '') }}" required>
+    @error('genero')
+        <div class="text-danger">{{ $message }}</div>
+    @enderror
 </div>
 
-<div class="form-group mb-3">
-    <label for="imagem">Imagem da Capa</label>
-    <input type="file" name="imagem" id="imagem" class="form-control">
-    @isset($musica)
-        <small class="form-text text-muted">Deixe em branco para manter a imagem atual.</small>
-    @endisset
+<div class="mb-3">
+    <label for="imagem" class="form-label">Capa da Música (Opcional):</label>
+    <input type="file" class="form-control" id="imagem" name="imagem">
+    @error('imagem')
+        <div class="text-danger">{{ $message }}</div>
+    @enderror
+    @if(isset($musica) && $musica->imagem)
+        <div class="mt-2">
+            <p>Capa atual:</p>
+            <img src="{{ asset('storage/' . $musica->imagem) }}" alt="Capa da música" style="max-width: 150px; height: auto;">
+        </div>
+    @endif
 </div>
 
-<div class="d-flex justify-content-end">
-    <a href="{{ route('musicas.index') }}" class="btn btn-secondary me-2">
-        <i class="fas fa-times"></i> Cancelar
-    </a>
-    <button type="submit" class="btn btn-primary">
-        <i class="fas fa-save"></i> Salvar
-    </button>
-</div>
+<button type="submit" class="btn btn-success">{{ $submitButtonText }}</button>
+<a href="{{ route('musicas.index') }}" class="btn btn-secondary">Cancelar</a>
